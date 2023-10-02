@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart';
@@ -21,6 +22,8 @@ class Http {
       Map<String, String> queryParameters = const {},
       Map<String, dynamic> body = const {},
       bool useToken = false}) async {
+    Map logs = {};
+    StackTrace? stackTrace;
     try {
       Uri url = Uri.parse(path.startsWith('http') ? path : '$_baseUrl$path');
 
@@ -41,6 +44,8 @@ class Http {
 
       final String bodyString = jsonEncode(body);
 
+      logs = {'url': url, 'method': method, 'body': body};
+
       switch (method) {
         case HttpMethod.get:
           response = await _client.get(url);
@@ -50,18 +55,36 @@ class Http {
               await _client.post(url, headers: headers, body: bodyString);
           break;
       }
+
+      logs = {
+        ...logs,
+        'statusCode': response.statusCode,
+        'responseBody': response.body
+      };
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return Either.right(onSucess(response.body));
       } else {
         return Either.left(HttpFailure(
             statusCode: response.statusCode, exception: NetworkException()));
       }
-    } catch (e) {
+    } catch (e, s) {
+      logs = {...logs, 'exception': e.runtimeType};
+      stackTrace = s;
       if (e is SocketException || e is ClientException) {
+        logs = {...logs, 'exception': 'networkException'};
         return Either.left(HttpFailure(exception: NetworkException()));
       } else {
         return Either.left(HttpFailure(exception: e));
       }
+    } finally {
+      log('''
+🛠️
+--------------------------------------------------------
+${const JsonEncoder.withIndent(' ').convert(logs)}
+--------------------------------------------------------
+🛠️
+''', stackTrace: stackTrace);
     }
   }
 }
