@@ -1,19 +1,22 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:sprinf_app/app/domain/either.dart';
 
 class Http {
-  Http(this._baseUrl, this._token, this._client);
+  Http({required baseUrl, required token, required client})
+      : _client = client,
+        _baseUrl = baseUrl,
+        _token = token;
 
   final Client _client;
   final String _baseUrl;
   final String _token;
 
-  Future<Either<HttpFailure, Response>> request(String path,
+  Future<Either<HttpFailure, R>> request<R>(String path,
       {HttpMethod method = HttpMethod.get,
+      required R Function(String responseBody) onSucess,
       Map<String, String> headers = const {},
       Map<String, String> queryParameters = const {},
       Map<String, dynamic> body = const {},
@@ -48,7 +51,7 @@ class Http {
           break;
       }
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        return Either.right(response);
+        return Either.right(onSucess(response.body));
       } else {
         return Either.left(HttpFailure(
             statusCode: response.statusCode, exception: NetworkException()));
