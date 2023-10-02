@@ -5,6 +5,12 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:sprinf_app/app/domain/either.dart';
 
+part 'failure.dart';
+part 'logs.dart';
+part 'parse_response_body.dart';
+
+enum HttpMethod { get, post }
+
 class Http {
   Http({required baseUrl, required token, required client})
       : _client = client,
@@ -17,12 +23,12 @@ class Http {
 
   Future<Either<HttpFailure, R>> request<R>(String path,
       {HttpMethod method = HttpMethod.get,
-      required R Function(String responseBody) onSucess,
+      required R Function(dynamic responseBody) onSucess,
       Map<String, String> headers = const {},
       Map<String, String> queryParameters = const {},
       Map<String, dynamic> body = const {},
       bool useToken = false}) async {
-    Map logs = {};
+    Map<String, dynamic> logs = {};
     StackTrace? stackTrace;
     try {
       Uri url = Uri.parse(path.startsWith('http') ? path : '$_baseUrl$path');
@@ -55,15 +61,15 @@ class Http {
               await _client.post(url, headers: headers, body: bodyString);
           break;
       }
-
+      dynamic responseBody = _parseResponseBody(response.body);
       logs = {
         ...logs,
         'statusCode': response.statusCode,
-        'responseBody': response.body
+        'responseBody': responseBody
       };
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        return Either.right(onSucess(response.body));
+        return Either.right(onSucess(responseBody));
       } else {
         return Either.left(HttpFailure(
             statusCode: response.statusCode, exception: NetworkException()));
@@ -78,24 +84,7 @@ class Http {
         return Either.left(HttpFailure(exception: e));
       }
     } finally {
-      log('''
-🛠️
---------------------------------------------------------
-${const JsonEncoder.withIndent(' ').convert(logs)}
---------------------------------------------------------
-🛠️
-''', stackTrace: stackTrace);
+      _printLogs(logs, stackTrace);
     }
   }
 }
-
-class HttpFailure {
-  final int? statusCode;
-  final Object? exception;
-
-  HttpFailure({this.statusCode, this.exception});
-}
-
-class NetworkException {}
-
-enum HttpMethod { get, post }
