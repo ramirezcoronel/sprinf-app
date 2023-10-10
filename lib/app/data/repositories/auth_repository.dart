@@ -9,15 +9,13 @@ class AuthRepository {
   AuthRepository(this._http);
   final Http _http;
 
-  Future<Either<HttpFailure, String>> login(
-      String email, String password) async {
+  Future<Either<HttpFailure, String>> login(String encryptedData) async {
     final result = await _http.request('api/auth/login',
         method: HttpMethod.post,
-        body: {'correo': email, 'contrasena': password},
-        onSucess: (responseBody) {
+        body: {"data": encryptedData}, onSucess: (responseBody) {
       // TODO: desencriptar response
       final json = responseBody;
-      return (responseBody == null) ? '' : json['request_token'] as String;
+      return (responseBody == null) ? '' : json['data'] as String;
     });
 
     return result.when(

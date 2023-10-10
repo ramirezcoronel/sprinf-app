@@ -1,29 +1,35 @@
 import 'package:fast_rsa/fast_rsa.dart';
-import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sprinf_app/app/data/services/local/session_service.dart';
 
 part 'encryption_service.g.dart';
 
 class EncryptionService {
-  final String _publicKey;
-  final String _privateKey;
-
-  EncryptionService(this._publicKey, this._privateKey);
+  final SessionService _sessionService;
+  EncryptionService(this._sessionService);
 
   Future<String> encrypt(message) async {
-    return await RSA.encryptPKCS1v15(message, _publicKey);
+    String publicKey = await _sessionService.getPublicKey() ?? '';
+    return await RSA.encryptPKCS1v15(message, publicKey);
   }
 
   Future<String> decrypt(message) async {
-    return await RSA.decryptPKCS1v15(message, _privateKey);
+    String privateKey = await _sessionService.getPrivateKey() ?? '';
+    return await RSA.decryptPKCS1v15(message, privateKey);
   }
 }
 
 @riverpod
-Future<EncryptionService> encryptionService(EncryptionServiceRef ref) async {
-  String privateKey =
-      await rootBundle.loadString('assets/keys/private_key.pem');
-  String publicKey = await rootBundle.loadString('assets/keys/public_key.pem');
+EncryptionService encryptionService(EncryptionServiceRef ref) {
+  return EncryptionService(ref.watch(sessionServiceProvider));
+}
 
-  return EncryptionService(publicKey, privateKey);
+@riverpod
+Future<String> encrypt(EncryptRef ref, String message) async {
+  return await ref.read(encryptionServiceProvider).encrypt(message);
+}
+
+@riverpod
+Future<String> decrypt(DecryptRef ref, String message) async {
+  return await ref.read(encryptionServiceProvider).decrypt(message);
 }
