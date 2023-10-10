@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:sprinf_app/app/domain/either.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'failure.dart';
 part 'logs.dart';
 part 'parse_response_body.dart';
+
+part 'http.g.dart';
 
 enum HttpMethod { get, post }
 
@@ -88,3 +90,18 @@ class Http {
     }
   }
 }
+
+@riverpod
+Http http(HttpRef ref, {required String baseUrl, required String token}) {
+  var client = HttpClient();
+  return Http(baseUrl: baseUrl, token: token, client: client);
+}
+
+
+// @riverpod
+// Future<Either<HttpFailure, R>> request<R>(RequestRef ref,
+//     {required String path}) {
+//   return ref
+//       .watch(httpProvider(baseUrl: '', 'asdasd'))
+//       .request(path, onSucess: onSucess);
+// }
