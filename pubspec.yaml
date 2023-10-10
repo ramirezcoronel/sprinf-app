@@ -41,6 +41,8 @@ dependencies:
   riverpod_lint: ^2.1.1
   flutter_secure_storage: ^9.0.0
   flutter_riverpod: ^2.4.3
+  fast_rsa: ^3.6.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +69,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
