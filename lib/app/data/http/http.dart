@@ -52,7 +52,7 @@ class Http {
 
       final String bodyString = jsonEncode(body);
 
-      logs = {'url': url, 'method': method, 'body': body};
+      logs = {'url': url.toString(), 'method': method.toString(), 'body': body};
 
       switch (method) {
         case HttpMethod.get:
@@ -77,10 +77,10 @@ class Http {
             statusCode: response.statusCode, exception: NetworkException()));
       }
     } catch (e, s) {
-      logs = {...logs, 'exception': e.runtimeType};
+      logs = {...logs, 'exception': e.toString()};
       stackTrace = s;
       if (e is SocketException || e is ClientException) {
-        logs = {...logs, 'exception': 'networkException'};
+        logs = {...logs, 'exception': 'networkException: ${e.toString()}'};
         return Either.left(HttpFailure(exception: NetworkException()));
       } else {
         return Either.left(HttpFailure(exception: e));
@@ -93,15 +93,5 @@ class Http {
 
 @riverpod
 Http http(HttpRef ref, {required String baseUrl, required String token}) {
-  var client = HttpClient();
-  return Http(baseUrl: baseUrl, token: token, client: client);
+  return Http(baseUrl: baseUrl, token: token, client: Client());
 }
-
-
-// @riverpod
-// Future<Either<HttpFailure, R>> request<R>(RequestRef ref,
-//     {required String path}) {
-//   return ref
-//       .watch(httpProvider(baseUrl: '', 'asdasd'))
-//       .request(path, onSucess: onSucess);
-// }
