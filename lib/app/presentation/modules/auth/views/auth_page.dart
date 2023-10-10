@@ -17,24 +17,21 @@ class AuthPage extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (error, stackTrace) => Text(error.toString()),
       data: (data) {
-        final AsyncValue<void> state = ref.watch(authControllerProvider);
+        return FlutterLogin(
+          savedEmail: 'root@gmail.com',
 
-        return state.isLoading
-            ? const CircularProgressIndicator()
-            : FlutterLogin(
-                savedEmail: 'root@gmail.com',
-                savedPassword: 'secret',
-                title: 'SPRINF',
-                // logo: AssetImage('assets/images/ecorp-lightblue.png'),
-                onLogin: (LoginData data) async {
-                  ref
-                      .read(authControllerProvider.notifier)
-                      .login(email: data.name, password: data.password);
-                  return null;
-                },
-                onRecoverPassword: (_) => null,
-                onSubmitAnimationCompleted: () => (),
-              );
+          savedPassword: 'secret',
+          title: 'SPRINF',
+          // logo: AssetImage('assets/images/ecorp-lightblue.png'),
+          onLogin: (LoginData data) async {
+            await ref
+                .read(authControllerProvider.notifier)
+                .login(email: data.name, password: data.password);
+            return null;
+          },
+          onRecoverPassword: (_) => null,
+          onSubmitAnimationCompleted: () => (),
+        );
       },
     );
   }

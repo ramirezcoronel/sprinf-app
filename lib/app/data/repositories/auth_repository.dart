@@ -13,9 +13,9 @@ class AuthRepository {
     final result = await _http.request('api/auth/login',
         method: HttpMethod.post,
         body: {"data": encryptedData}, onSucess: (responseBody) {
-      // TODO: desencriptar response
-      final json = responseBody;
-      return (responseBody == null) ? '' : json['data'] as String;
+      return (responseBody == null)
+          ? ''
+          : responseBody['request_token'] as String;
     });
 
     return result.when(
