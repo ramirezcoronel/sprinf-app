@@ -1,4 +1,5 @@
 import 'package:fast_rsa/fast_rsa.dart';
+import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encryption_service.g.dart';
@@ -19,11 +20,10 @@ class EncryptionService {
 }
 
 @riverpod
-EncryptionService encryptionService(EncryptionServiceRef ref) {
-  return EncryptionService('public', 'private');
-}
+Future<EncryptionService> encryptionService(EncryptionServiceRef ref) async {
+  String privateKey =
+      await rootBundle.loadString('assets/keys/private_key.pem');
+  String publicKey = await rootBundle.loadString('assets/keys/public_key.pem');
 
-@riverpod
-Future<String> encrypt(EncryptRef ref, String message) async {
-  return await ref.read(encryptionServiceProvider).encrypt(message);
+  return EncryptionService(publicKey, privateKey);
 }
