@@ -30,7 +30,6 @@ class AuthController extends _$AuthController {
           (encryptedToken) async {
         String token =
             await ref.read(encryptionServiceProvider).decrypt(encryptedToken);
-        print('almacenando token: ${token}');
         // ref.read(sessionServiceProvider).saveToken(token);
       });
     });
