@@ -19,7 +19,7 @@ class SplashScreen extends ConsumerWidget {
         loading: () => const CircularProgressIndicator(),
         data: (data) {
           if (data) {
-            return const AuthPage();
+            return const HomePage();
           } else {
             return const AuthPage();
           }
