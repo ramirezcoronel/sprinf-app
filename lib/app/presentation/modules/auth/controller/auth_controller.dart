@@ -20,15 +20,6 @@ class AuthController extends _$AuthController {
 
   User? get getUser => appUser;
 
-  Future<bool> get isLoggedIn async {
-    String? token = await ref.watch(sessionServiceProvider).token;
-    if (token == null) return false;
-    User? user = await ref.read(sessionServiceProvider).getUser();
-    if (token == null) return false;
-    appUser = user;
-    return true;
-  }
-
   Future<void> login({required String email, required String password}) async {
     state = const AsyncLoading();
 
@@ -44,8 +35,15 @@ class AuthController extends _$AuthController {
           (encryptedToken) async {
         String response =
             await ref.read(encryptionServiceProvider).decrypt(encryptedToken);
-        print(response);
-        // ref.read(sessionServiceProvider).saveToken(token);
+        final data = jsonDecode(response);
+        String token = data['request_token'];
+
+        Map<String, dynamic> userData = data['userData'];
+
+        User user = User.fromJson(userData);
+        appUser = user;
+        ref.read(sessionServiceProvider).saveToken(token);
+        ref.read(sessionServiceProvider).saveUser(user);
       });
     });
   }

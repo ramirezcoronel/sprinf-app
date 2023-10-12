@@ -21,6 +21,15 @@ class SessionService {
     return await _secureStorage.read(key: _tokenKey);
   }
 
+  Future<bool> isLoggedIn() async {
+    String? token = await this.token;
+    print('token, ${token}');
+    if (token == null) return false;
+    User? user = await getUser();
+    if (user == null) return false;
+    return true;
+  }
+
   Future<void> saveToken(String token) {
     return _secureStorage.write(key: _tokenKey, value: token);
   }
@@ -31,12 +40,11 @@ class SessionService {
     return _secureStorage.write(key: _userKey, value: stringUser);
   }
 
-  Future<User?> getUser() async {
-    String? stringUser = await _secureStorage.read(key: _tokenKey);
-    if (stringUser == null) return null;
+  Future<User> getUser() async {
+    String? stringUser = await _secureStorage.read(key: _userKey);
+    if (stringUser == null) throw Exception('Usuario no encontrado');
 
-    User user = User.fromJson(jsonDecode(stringUser));
-    return user;
+    return User.fromJson(jsonDecode(stringUser));
   }
 
   Future<void> deleteAll() async {
@@ -77,4 +85,14 @@ SessionService sessionService(SessionServiceRef ref) {
 @riverpod
 Future<bool> loadBundle(LoadBundleRef ref) async {
   return await ref.read(sessionServiceProvider).loadBundleIntoStorage();
+}
+
+@riverpod
+Future<bool> isLoggedIn(IsLoggedInRef ref) async {
+  return await ref.read(sessionServiceProvider).isLoggedIn();
+}
+
+@riverpod
+Future<User> getUser(GetUserRef ref) async {
+  return await ref.read(sessionServiceProvider).getUser();
 }
