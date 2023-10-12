@@ -13,13 +13,11 @@ class AuthRepository {
     final result = await _http.request('api/auth/login',
         method: HttpMethod.post,
         body: {"data": encryptedData}, onSucess: (responseBody) {
-      return (responseBody == null)
-          ? ''
-          : responseBody['request_token'] as String;
+      return responseBody;
     });
 
-    return result.when(
-        (failure) => Either.left(failure), (token) => Either.right(token));
+    return result.when((failure) => Either.left(failure),
+        (encryptedResponse) => Either.right(encryptedResponse));
   }
 }
 

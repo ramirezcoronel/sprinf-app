@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sprinf_app/app/domain/model/user.dart';
 
 part 'session_service.g.dart';
 
+const _userKey = 'usuario';
 const _tokenKey = 'token';
 const _publicKey = 'publickey';
 const _privateKey = 'privatekey';
@@ -19,6 +23,20 @@ class SessionService {
 
   Future<void> saveToken(String token) {
     return _secureStorage.write(key: _tokenKey, value: token);
+  }
+
+  Future<void> saveUser(User user) {
+    // prefs.set
+    String stringUser = jsonEncode(user.toJson());
+    return _secureStorage.write(key: _userKey, value: stringUser);
+  }
+
+  Future<User?> getUser() async {
+    String? stringUser = await _secureStorage.read(key: _tokenKey);
+    if (stringUser == null) return null;
+
+    User user = User.fromJson(jsonDecode(stringUser));
+    return user;
   }
 
   Future<void> deleteAll() async {
@@ -51,7 +69,9 @@ class SessionService {
 
 @riverpod
 SessionService sessionService(SessionServiceRef ref) {
-  return SessionService(const FlutterSecureStorage());
+  return SessionService(
+    const FlutterSecureStorage(),
+  );
 }
 
 @riverpod
