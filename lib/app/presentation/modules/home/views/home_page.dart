@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sprinf_app/app/data/services/local/session_service.dart';
@@ -41,7 +42,7 @@ class HomePage extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Bienvenido!'),
+                          Text('Bienvenido! ${data.nombre}'),
                           MyButton(
                               onPressed: () async {
                                 String? token = await ref
@@ -50,6 +51,20 @@ class HomePage extends ConsumerWidget {
 
                                 String? downloadPath = await getDownloadPath();
                                 if (downloadPath == null) return false;
+
+                                final taskId = await FlutterDownloader.enqueue(
+                                  url:
+                                      'http://192.168.0.105:8080/api/project-report/TR4',
+                                  headers: {
+                                    'Authorization': 'Bearer $token'
+                                  }, // optional: header send with url (auth token etc)
+                                  fileName: 'reporte-proyectos.xlsx',
+                                  savedDir: downloadPath,
+                                  showNotification:
+                                      true, // show download progress in status bar (for Android)
+                                  openFileFromNotification:
+                                      true, // click on notification to open downloaded file (for Android)
+                                );
                               },
                               buttonText: 'Descargar Reporte')
                         ],
