@@ -24,6 +24,7 @@ class SessionService {
 
   Future<bool> isLoggedIn() async {
     String? token = await this.token;
+    print('RETORNANDO');
     if (kDebugMode) {
       print('token, $token');
     }
@@ -45,7 +46,6 @@ class SessionService {
   Future<User> getUser() async {
     String? stringUser = await _secureStorage.read(key: _userKey);
     if (stringUser == null) throw Exception('Usuario no encontrado');
-
     return User.fromJson(jsonDecode(stringUser));
   }
 
@@ -74,6 +74,10 @@ class SessionService {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> logout() {
+    return _secureStorage.deleteAll();
   }
 }
 

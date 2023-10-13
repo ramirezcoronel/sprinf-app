@@ -14,6 +14,7 @@ class LoginBodyScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(authControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,17 +85,39 @@ class LoginBodyScreen extends ConsumerWidget {
               const SizedBox(
                 height: 20,
               ),
-              MyButton(
-                onPressed: () async {
-                  String email = emailController.text;
-                  String password = passwordController.text;
+              state.when(data: (data) {
+                return MyButton(
+                  onPressed: () async {
+                    String email = emailController.text;
+                    String password = passwordController.text;
 
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .login(email: email, password: password);
-                },
-                buttonText: 'Ingresar',
-              ),
+                    await ref
+                        .read(authControllerProvider.notifier)
+                        .login(email: email, password: password);
+                  },
+                  buttonText: 'Ingresar',
+                );
+              }, error: (err, _) {
+                print(err.toString());
+                return Column(
+                  children: [
+                    MyButton(
+                      onPressed: () async {
+                        String email = emailController.text;
+                        String password = passwordController.text;
+
+                        await ref
+                            .read(authControllerProvider.notifier)
+                            .login(email: email, password: password);
+                      },
+                      buttonText: 'Ingresar',
+                    ),
+                    Text('Error ${err.toString()}')
+                  ],
+                );
+              }, loading: () {
+                return const Center(child: CircularProgressIndicator());
+              }),
               const SizedBox(
                 height: 12,
               ),

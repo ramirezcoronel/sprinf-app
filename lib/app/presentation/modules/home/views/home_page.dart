@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sprinf_app/app/data/services/local/session_service.dart';
 import 'package:sprinf_app/app/presentation/global/components/my_button.dart';
+import 'package:sprinf_app/app/presentation/modules/splash/views/contoller/splash_controller.dart';
+import 'package:sprinf_app/routes/routes.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -67,7 +69,14 @@ class HomePage extends ConsumerWidget {
                                       true, // click on notification to open downloaded file (for Android)
                                 );
                               },
-                              buttonText: 'Descargar Reporte')
+                              buttonText: 'Descargar Reporte'),
+                          MyButton(
+                              onPressed: () async {
+                                await ref
+                                    .read(splashControllerProvider.notifier)
+                                    .logout();
+                              },
+                              buttonText: 'Cerrar Sesión')
                         ],
                       );
                     }))));

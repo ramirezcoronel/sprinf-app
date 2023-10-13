@@ -7,6 +7,7 @@ import 'package:sprinf_app/app/data/services/local/encryption_service.dart';
 import 'package:sprinf_app/app/data/services/local/session_service.dart';
 import 'package:sprinf_app/app/domain/either.dart';
 import 'package:sprinf_app/app/domain/model/user.dart';
+import 'package:sprinf_app/app/presentation/modules/splash/views/contoller/splash_controller.dart';
 part 'auth_controller.g.dart';
 
 @riverpod
@@ -23,15 +24,14 @@ class AuthController extends _$AuthController {
   Future<void> login({required String email, required String password}) async {
     state = const AsyncLoading();
 
-    Map<String, String> data = {'correo': email, 'contrasena': password};
-    String encrypted =
-        await ref.read(encryptionServiceProvider).encrypt(jsonEncode(data));
-
     state = await AsyncValue.guard(() async {
+      Map<String, String> data = {'correo': email, 'contrasena': password};
+      String encrypted =
+          await ref.read(encryptionServiceProvider).encrypt(jsonEncode(data));
       Either<HttpFailure, String> result =
           await ref.read(authRepositoryProvider).login(encrypted);
 
-      result.when((failure) => throw Exception(failure.toString()),
+      await result.when((failure) => throw Exception(failure.toString()),
           (encryptedToken) async {
         String response =
             await ref.read(encryptionServiceProvider).decrypt(encryptedToken);
@@ -42,8 +42,9 @@ class AuthController extends _$AuthController {
 
         User user = User.fromJson(userData);
         appUser = user;
-        ref.read(sessionServiceProvider).saveToken(token);
-        ref.read(sessionServiceProvider).saveUser(user);
+        await ref.read(sessionServiceProvider).saveToken(token);
+        await ref.read(sessionServiceProvider).saveUser(user);
+        ref.read(splashControllerProvider.notifier).login(user);
       });
     });
   }
