@@ -21,10 +21,11 @@ class HomePage extends ConsumerWidget {
           directory = Directory('/storage/emulated/0/Download');
           // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
           // ignore: avoid_slow_async_io
-          if (!await directory.exists())
+          if (!await directory.exists()) {
             directory = await getExternalStorageDirectory();
+          }
         }
-      } catch (err, stack) {
+      } catch (err) {
         print("Cannot get download folder path");
       }
       return directory?.path;
@@ -52,7 +53,7 @@ class HomePage extends ConsumerWidget {
                                 String? downloadPath = await getDownloadPath();
                                 if (downloadPath == null) return false;
 
-                                final taskId = await FlutterDownloader.enqueue(
+                                await FlutterDownloader.enqueue(
                                   url:
                                       'http://192.168.0.105:8080/api/project-report/TR4',
                                   headers: {

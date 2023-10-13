@@ -23,7 +23,6 @@ class AuthRepository {
 
 @riverpod
 AuthRepository authRepository(AuthRepositoryRef ref) {
-  // TODO: obtener baseURL desde una variable de entorno
   return AuthRepository(ref
       .watch(HttpProvider(baseUrl: 'http://192.168.0.105:8080/', token: '')));
 }

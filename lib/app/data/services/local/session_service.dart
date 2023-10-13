@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,10 +24,11 @@ class SessionService {
 
   Future<bool> isLoggedIn() async {
     String? token = await this.token;
-    print('token, ${token}');
+    if (kDebugMode) {
+      print('token, $token');
+    }
     if (token == null) return false;
-    User? user = await getUser();
-    if (user == null) return false;
+    await getUser();
     return true;
   }
 

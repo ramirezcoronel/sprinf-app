@@ -1,4 +1,6 @@
+// ignore: depend_on_referenced_packages
 import 'package:freezed_annotation/freezed_annotation.dart';
+// ignore: depend_on_referenced_packages, unnecessary_import
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.freezed.dart';
