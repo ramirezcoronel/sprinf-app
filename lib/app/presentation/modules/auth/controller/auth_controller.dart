@@ -31,8 +31,10 @@ class AuthController extends _$AuthController {
       Either<HttpFailure, String> result =
           await ref.read(authRepositoryProvider).login(encrypted);
 
-      await result.when((failure) => throw Exception(failure.toString()),
-          (encryptedToken) async {
+      await result.when(
+          (failure) => throw HttpFailure(
+              exception: failure.exception.toString(),
+              statusCode: failure.statusCode), (encryptedToken) async {
         String response =
             await ref.read(encryptionServiceProvider).decrypt(encryptedToken);
         final data = jsonDecode(response);

@@ -74,14 +74,15 @@ class Http {
         return Either.right(onSucess(responseBody));
       } else {
         return Either.left(HttpFailure(
-            statusCode: response.statusCode, exception: NetworkException()));
+            statusCode: response.statusCode,
+            exception: responseBody.toString()));
       }
     } catch (e, s) {
       logs = {...logs, 'exception': e.toString()};
       stackTrace = s;
       if (e is SocketException || e is ClientException) {
         logs = {...logs, 'exception': 'networkException: ${e.toString()}'};
-        return Either.left(HttpFailure(exception: NetworkException()));
+        return Either.left(HttpFailure(exception: e.toString()));
       } else {
         return Either.left(HttpFailure(exception: e));
       }

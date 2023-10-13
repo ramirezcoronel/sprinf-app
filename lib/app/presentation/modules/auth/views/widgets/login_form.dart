@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:sprinf_app/app/data/http/http.dart';
 import 'package:sprinf_app/app/presentation/global/components/my_button.dart';
 import 'package:sprinf_app/app/presentation/global/components/my_textfield.dart';
 import 'package:sprinf_app/app/presentation/modules/auth/controller/auth_controller.dart';
@@ -98,7 +99,6 @@ class LoginBodyScreen extends ConsumerWidget {
                   buttonText: 'Ingresar',
                 );
               }, error: (err, _) {
-                print(err.toString());
                 return Column(
                   children: [
                     MyButton(
@@ -112,7 +112,10 @@ class LoginBodyScreen extends ConsumerWidget {
                       },
                       buttonText: 'Ingresar',
                     ),
-                    Text('Error ${err.toString()}')
+                    (err is HttpFailure)
+                        ? Text(
+                            'Error ${err.statusCode.toString()}: ${err.exception.toString()}')
+                        : const Text('Error inesperado')
                   ],
                 );
               }, loading: () {
