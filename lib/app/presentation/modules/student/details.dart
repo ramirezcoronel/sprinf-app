@@ -44,11 +44,19 @@ class StudentDetails extends ConsumerWidget {
                           Card(
                             // color: HexColor('#0249a7'),
                             child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.profile),
                               title: Text(
                                 '${data.nombre} ${data.apellido}',
                                 style: GoogleFonts.poppins(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                  // color: HexColor("#ffffff"),
+                                ),
+                              ),
+                              subtitle: Text(
+                                'Cedula: ${data.cedula}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
                                   // color: HexColor("#ffffff"),
                                 ),
                               ),
@@ -58,21 +66,71 @@ class StudentDetails extends ConsumerWidget {
                             height: 25,
                           ),
                           Card(
-                            // color: HexColor('#0249a7'),
                             child: ListTile(
-                              title: Text(
-                                '${data.nombre} ${data.apellido}',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  // color: HexColor("#ffffff"),
-                                ),
-                              ),
+                              leading: Icon(TernavIcons.lightOutline.location),
+                              title: Text(data.direccion),
+                              subtitle: const Text('Dirección'),
                             ),
                           ),
                           const SizedBox(
-                            height: 25,
+                            height: 10,
                           ),
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.call),
+                              title: Text(data.telefono),
+                              subtitle: const Text('Telefono'),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          if (data.proyecto != null)
+                            Card(
+                              child: ListTile(
+                                leading:
+                                    Icon(TernavIcons.lightOutline.programming),
+                                title: Text(data.proyecto!.nombre),
+                                subtitle: const Text('Integrante de Proyecto'),
+                              ),
+                            ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          if (data.inscripciones != null)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Materias inscritas',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    // color: HexColor("#ffffff"),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  children: data.inscripciones!
+                                      .map<Widget>((inscripcion) => Card(
+                                            child: ListTile(
+                                              leading: Icon(TernavIcons
+                                                  .lightOutline.document),
+                                              title: Text(
+                                                  inscripcion.nombreMateria),
+                                              subtitle: Text(
+                                                  'Calificación: ${inscripcion.calificacion}'),
+                                            ),
+                                          ))
+                                      .toList(),
+                                )
+                              ],
+                            )
                         ],
                       );
                     }
