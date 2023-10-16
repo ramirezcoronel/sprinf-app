@@ -49,7 +49,7 @@ class HomePage extends ConsumerWidget {
                       physics: const BouncingScrollPhysics(),
                       child: Column(children: [
                         Container(
-                            height: 200,
+                            height: 250,
                             decoration: const BoxDecoration(
                                 image: DecorationImage(
                               // repeat: ImageRepeat.repeat,
@@ -108,15 +108,22 @@ class HomePage extends ConsumerWidget {
                                         TernavIcons.lightOutline.arrow_right_1),
                                   ),
                                 ),
-                                MyButton(
-                                    onPressed: () async {
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Card(
+                                  child: ListTile(
+                                    leading: Icon(
+                                        TernavIcons.lightOutline.note_down),
+                                    title: const Text('Descargar Reporte'),
+                                    onTap: () async {
                                       String? token = await ref
                                           .read(sessionServiceProvider)
                                           .token;
 
                                       String? downloadPath =
                                           await getDownloadPath();
-                                      if (downloadPath == null) return false;
+                                      if (downloadPath == null) return;
 
                                       await FlutterDownloader.enqueue(
                                         url:
@@ -132,15 +139,24 @@ class HomePage extends ConsumerWidget {
                                             true, // click on notification to open downloaded file (for Android)
                                       );
                                     },
-                                    buttonText: 'Descargar Reporte'),
-                                MyButton(
-                                    onPressed: () async {
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Card(
+                                  child: ListTile(
+                                    leading:
+                                        Icon(TernavIcons.lightOutline.logout),
+                                    title: Text('Cerrar Sesión'),
+                                    onTap: () async {
                                       await ref
                                           .read(
                                               splashControllerProvider.notifier)
                                           .logout();
                                     },
-                                    buttonText: 'Cerrar Sesión'),
+                                  ),
+                                ),
                               ],
                             )),
                       ]));
