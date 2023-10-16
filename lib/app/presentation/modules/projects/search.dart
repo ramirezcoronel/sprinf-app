@@ -93,6 +93,9 @@ class _SearchProjectsState extends State<SearchProjects> {
                       return Card(
                         margin: const EdgeInsets.all(0.0),
                         child: ListTile(
+                          onTap: () {
+                            print('Navegar a pagina de proyecto $index');
+                          },
                           leading: CircleAvatar(
                             child: Icon(TernavIcons.lightOutline.folder),
                             // backgroundImage: NetworkImage(
