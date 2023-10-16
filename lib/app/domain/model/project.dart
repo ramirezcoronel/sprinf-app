@@ -11,7 +11,7 @@ part 'project.g.dart';
 @freezed
 class Project with _$Project {
   const factory Project(
-      {required int id,
+      {required String id,
       // @JsonKey(name: 'fase_id') required String faseId,
       required String nombre,
       required String comunidad,

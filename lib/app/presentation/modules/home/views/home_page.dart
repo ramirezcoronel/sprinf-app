@@ -123,7 +123,7 @@ class HomePage extends ConsumerWidget {
                                     },
                                     leading:
                                         Icon(TernavIcons.lightOutline.grid),
-                                    title: Text('Baremos'),
+                                    title: const Text('Baremos'),
                                     trailing: Icon(
                                         TernavIcons.lightOutline.arrow_right_1),
                                   ),

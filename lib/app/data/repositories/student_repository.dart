@@ -11,12 +11,18 @@ class StudentRepository {
   final Http _http;
 
   Future<Either<HttpFailure, Student>> obtener(String id) async {
-    return Future.value(Either.right(const Student(
-        id: 1,
-        nombre: 'Carlos',
-        apellido: 'Ramirez',
-        cedula: '28566432',
-        proyectoId: 1)));
+    final result = await _http.request('api/estudiantes',
+        useToken: true,
+        method: HttpMethod.post,
+        body: {
+          "data": {"codigo": id}
+        }, onSucess: (responseBody) {
+      Student estudiante = Student.fromJson(responseBody);
+      return estudiante;
+    });
+
+    return result.when((error) => Either.left(error),
+        (estudiante) => Either.right(estudiante));
   }
 }
 

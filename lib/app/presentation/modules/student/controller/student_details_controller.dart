@@ -25,9 +25,9 @@ class StudentDetailsController extends _$StudentDetailsController {
     String? token = await ref.read(sessionServiceProvider).token;
     if (token == null) throw Exception('Token no definido');
     final resultado =
-        await ref.read(studentRepositoryProvider(token)).obtener("1");
+        await ref.read(studentRepositoryProvider(token)).obtener("e-15408");
     return resultado.when(
         (p0) => throw Exception('Error al obtener estudiante'),
-        (proyecto) => proyecto);
+        (estudiante) => estudiante);
   }
 }

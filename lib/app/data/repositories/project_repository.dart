@@ -12,7 +12,7 @@ class ProjectRepository {
 
   Future<Either<HttpFailure, Project>> obtener(String id) async {
     return Future.value(Either.right(const Project(
-        id: 1,
+        id: "1",
         nombre: "Sistema de Gestión de Proyectos Sociotecnologicos",
         comunidad: "UPTAEB",
         direccion: "Av. La Salle",

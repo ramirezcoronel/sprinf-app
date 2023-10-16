@@ -45,14 +45,23 @@ class Http {
       };
 
       if (useToken) {
-        headers = {'Authorization': 'Bearer $_token', ...headers};
+        print('añadiendo header token $_token');
+        headers = {
+          HttpHeaders.authorizationHeader: 'Bearer $_token',
+          ...headers
+        };
       }
 
       late final Response response;
 
       final String bodyString = jsonEncode(body);
 
-      logs = {'url': url.toString(), 'method': method.toString(), 'body': body};
+      logs = {
+        'url': url.toString(),
+        'method': method.toString(),
+        'body': body,
+        'headers': headers
+      };
 
       switch (method) {
         case HttpMethod.get:
