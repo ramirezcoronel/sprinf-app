@@ -52,6 +52,7 @@ dependencies:
   flutter_downloader: ^1.11.3
   ternav_icons: ^1.0.0
   data_table_2: ^2.5.8
+  flutter_svg: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/logo-2.png
     - assets/images/background.png
+    - assets/images/dashboard-background.png
     - assets/keys/private_key.pem
     - assets/keys/public_key.pem
   #   - images/a_dot_burr.jpeg

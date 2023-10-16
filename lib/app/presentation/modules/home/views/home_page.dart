@@ -10,6 +10,7 @@ import 'package:sprinf_app/app/presentation/global/constant.dart';
 import 'package:sprinf_app/app/presentation/global/drawer.dart';
 import 'package:sprinf_app/app/presentation/modules/splash/views/contoller/splash_controller.dart';
 import 'package:sprinf_app/routes/routes.dart';
+import 'package:ternav_icons/ternav_icons.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -46,71 +47,103 @@ class HomePage extends ConsumerWidget {
                 data: (data) {
                   return SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  text: "Hola ",
-                                  style: const TextStyle(
-                                      color: kDarkBlue, fontSize: 20),
-                                  children: [
-                                    TextSpan(
-                                      text: data.nombre,
-                                      style: const TextStyle(
-                                          color: kDarkBlue,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const TextSpan(
-                                      text: ", Bienvenido de vuelta!",
-                                    ),
-                                  ],
+                      child: Column(children: [
+                        Container(
+                            height: 200,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                              // repeat: ImageRepeat.repeat,
+                              image: AssetImage(
+                                  'assets/images/dashboard-background.png'),
+                            ))),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    text: "Hola ",
+                                    style: const TextStyle(
+                                        color: kDarkBlue, fontSize: 20),
+                                    children: [
+                                      TextSpan(
+                                        text: data.nombre,
+                                        style: const TextStyle(
+                                            color: kDarkBlue,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const TextSpan(
+                                        text: ", Bienvenido de vuelta!",
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Text('Bienvenido! ${data.nombre}'),
-                              MyButton(
-                                  onPressed: () async {
-                                    String? token = await ref
-                                        .read(sessionServiceProvider)
-                                        .token;
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Card(
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.projects);
+                                    },
+                                    leading: Icon(
+                                        TernavIcons.lightOutline.programming),
+                                    title: Text('Proyectos'),
+                                    trailing: Icon(
+                                        TernavIcons.lightOutline.arrow_right_1),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Card(
+                                  child: ListTile(
+                                    leading:
+                                        Icon(TernavIcons.lightOutline.profile),
+                                    title: Text('Estudiantes'),
+                                    trailing: Icon(
+                                        TernavIcons.lightOutline.arrow_right_1),
+                                  ),
+                                ),
+                                MyButton(
+                                    onPressed: () async {
+                                      String? token = await ref
+                                          .read(sessionServiceProvider)
+                                          .token;
 
-                                    String? downloadPath =
-                                        await getDownloadPath();
-                                    if (downloadPath == null) return false;
+                                      String? downloadPath =
+                                          await getDownloadPath();
+                                      if (downloadPath == null) return false;
 
-                                    await FlutterDownloader.enqueue(
-                                      url:
-                                          'http://192.168.0.105:8080/api/project-report/TR4',
-                                      headers: {
-                                        'Authorization': 'Bearer $token'
-                                      }, // optional: header send with url (auth token etc)
-                                      fileName: 'reporte-proyectos.xlsx',
-                                      savedDir: downloadPath,
-                                      showNotification:
-                                          true, // show download progress in status bar (for Android)
-                                      openFileFromNotification:
-                                          true, // click on notification to open downloaded file (for Android)
-                                    );
-                                  },
-                                  buttonText: 'Descargar Reporte'),
-                              MyButton(
-                                  onPressed: () async {
-                                    await ref
-                                        .read(splashControllerProvider.notifier)
-                                        .logout();
-                                  },
-                                  buttonText: 'Cerrar Sesión'),
-                              MyButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, Routes.projects);
-                                  },
-                                  buttonText: 'Ir A Proyectos'),
-                            ],
-                          )));
+                                      await FlutterDownloader.enqueue(
+                                        url:
+                                            'http://192.168.0.105:8080/api/project-report/TR4',
+                                        headers: {
+                                          'Authorization': 'Bearer $token'
+                                        }, // optional: header send with url (auth token etc)
+                                        fileName: 'reporte-proyectos.xlsx',
+                                        savedDir: downloadPath,
+                                        showNotification:
+                                            true, // show download progress in status bar (for Android)
+                                        openFileFromNotification:
+                                            true, // click on notification to open downloaded file (for Android)
+                                      );
+                                    },
+                                    buttonText: 'Descargar Reporte'),
+                                MyButton(
+                                    onPressed: () async {
+                                      await ref
+                                          .read(
+                                              splashControllerProvider.notifier)
+                                          .logout();
+                                    },
+                                    buttonText: 'Cerrar Sesión'),
+                              ],
+                            )),
+                      ]));
                 })));
   }
 }
