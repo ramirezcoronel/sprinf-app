@@ -101,6 +101,10 @@ class HomePage extends ConsumerWidget {
                                 ),
                                 Card(
                                   child: ListTile(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.students);
+                                    },
                                     leading:
                                         Icon(TernavIcons.lightOutline.profile),
                                     title: Text('Estudiantes'),
@@ -113,9 +117,26 @@ class HomePage extends ConsumerWidget {
                                 ),
                                 Card(
                                   child: ListTile(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.students);
+                                    },
+                                    leading:
+                                        Icon(TernavIcons.lightOutline.grid),
+                                    title: Text('Baremos'),
+                                    trailing: Icon(
+                                        TernavIcons.lightOutline.arrow_right_1),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Card(
+                                  child: ListTile(
                                     leading: Icon(
                                         TernavIcons.lightOutline.note_down),
-                                    title: const Text('Descargar Reporte'),
+                                    title:
+                                        const Text('Descargar Reporte Matriz'),
                                     onTap: () async {
                                       String? token = await ref
                                           .read(sessionServiceProvider)

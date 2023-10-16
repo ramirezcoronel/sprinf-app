@@ -8,4 +8,6 @@ class Routes {
   static const home = '/home';
   static const projects = '/projects';
   static const projectsDetails = '/details';
+  static const students = '/students';
+  static const studentsDetails = '/student-details';
 }
