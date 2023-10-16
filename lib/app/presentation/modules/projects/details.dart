@@ -41,105 +41,79 @@ class Details extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Card(
-                            color: HexColor('#0249a7'),
+                            // color: HexColor('#0249a7'),
                             child: ListTile(
                               title: Text(
                                 data.nombre,
                                 style: GoogleFonts.poppins(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: HexColor("#ffffff"),
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${data.nombreTrayecto} - ${data.nombreFase} - ${data.fechaInicio}/${data.fechaCierre}',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#ffffff"),
+                                  // color: HexColor("#ffffff"),
                                 ),
                               ),
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Comunidad: ',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              ),
-                              Text(
-                                data.comunidad,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              )
-                            ],
+                          const SizedBox(
+                            height: 25,
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Dirección: ',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              ),
-                              Text(
-                                data.direccion,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              )
-                            ],
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.calender),
+                              title: Text(
+                                  '${data.nombreTrayecto} - ${data.nombreFase}'),
+                              subtitle: Text('Trayecto'),
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Tutor Interno: ',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              ),
-                              Text(
-                                data.tutorInNombre,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              )
-                            ],
+                          const SizedBox(
+                            height: 10,
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Tutor Externo: ',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              ),
-                              Text(
-                                data.tutorEx,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: HexColor("#000"),
-                                ),
-                              )
-                            ],
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.calender),
+                              title: Text(
+                                  '${data.fechaInicio} - ${data.fechaCierre}'),
+                              subtitle: Text('Fecha'),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.gps_1),
+                              title: Text(data.comunidad),
+                              subtitle: Text('Comunidad'),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.location),
+                              title: Text(data.direccion),
+                              subtitle: Text('Dirección'),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.profile),
+                              title: Text(data.tutorInNombre),
+                              subtitle: Text('Tutor Interno'),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Card(
+                            child: ListTile(
+                              leading: Icon(TernavIcons.lightOutline.profile),
+                              title: Text(data.tutorEx),
+                              subtitle: Text('Tutor Externo'),
+                            ),
                           ),
                         ],
                       );
