@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sprinf_app/routes/routes.dart';
 import 'package:ternav_icons/ternav_icons.dart';
 
 class SearchProjects extends StatefulWidget {
@@ -94,6 +95,8 @@ class _SearchProjectsState extends State<SearchProjects> {
                         margin: const EdgeInsets.all(0.0),
                         child: ListTile(
                           onTap: () {
+                            Navigator.pushNamed(context, Routes.projectsDetails,
+                                arguments: index);
                             print('Navegar a pagina de proyecto $index');
                           },
                           leading: CircleAvatar(
