@@ -28,7 +28,7 @@ class Details extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: proyecto.when(
                   error: (error, __) => Text(error.toString()),
                   loading: () => const CircularProgressIndicator(),
@@ -40,29 +40,106 @@ class Details extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            data.nombre,
-                            style: GoogleFonts.poppins(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: HexColor("#000"),
+                          Card(
+                            color: HexColor('#0249a7'),
+                            child: ListTile(
+                              title: Text(
+                                data.nombre,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#ffffff"),
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${data.nombreTrayecto} - ${data.nombreFase} - ${data.fechaInicio}/${data.fechaCierre}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#ffffff"),
+                                ),
+                              ),
                             ),
                           ),
-                          Text(
-                            '${data.nombreTrayecto} - ${data.nombreFase}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: HexColor("#000"),
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Comunidad: ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              ),
+                              Text(
+                                data.comunidad,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              )
+                            ],
                           ),
-                          Text(
-                            '${data.fechaInicio}/${data.fechaCierre}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: HexColor("#000"),
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Dirección: ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              ),
+                              Text(
+                                data.direccion,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Tutor Interno: ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              ),
+                              Text(
+                                data.tutorInNombre,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Tutor Externo: ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              ),
+                              Text(
+                                data.tutorEx,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: HexColor("#000"),
+                                ),
+                              )
+                            ],
                           ),
                         ],
                       );
