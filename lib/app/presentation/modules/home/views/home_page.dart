@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sprinf_app/app/data/services/local/session_service.dart';
 import 'package:sprinf_app/app/presentation/global/components/my_button.dart';
+import 'package:sprinf_app/app/presentation/global/constant.dart';
+import 'package:sprinf_app/app/presentation/global/drawer.dart';
 import 'package:sprinf_app/app/presentation/modules/splash/views/contoller/splash_controller.dart';
 import 'package:sprinf_app/routes/routes.dart';
 
@@ -35,50 +37,80 @@ class HomePage extends ConsumerWidget {
 
     final user = ref.watch(getUserProvider);
     return Scaffold(
+        appBar: AppBar(title: Text('Dashboard')),
+        drawer: const SideMenu(),
         body: SafeArea(
-            child: Center(
-                child: user.when(
-                    error: (error, _) => Text(error.toString()),
-                    loading: () => const CircularProgressIndicator(),
-                    data: (data) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Bienvenido! ${data.nombre}'),
-                          MyButton(
-                              onPressed: () async {
-                                String? token = await ref
-                                    .read(sessionServiceProvider)
-                                    .token;
+            child: user.when(
+                error: (error, _) => Text(error.toString()),
+                loading: () => const CircularProgressIndicator(),
+                data: (data) {
+                  return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  text: "Hola ",
+                                  style: const TextStyle(
+                                      color: kDarkBlue, fontSize: 20),
+                                  children: [
+                                    TextSpan(
+                                      text: data.nombre,
+                                      style: const TextStyle(
+                                          color: kDarkBlue,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const TextSpan(
+                                      text: ", Bienvenido de vuelta!",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text('Bienvenido! ${data.nombre}'),
+                              MyButton(
+                                  onPressed: () async {
+                                    String? token = await ref
+                                        .read(sessionServiceProvider)
+                                        .token;
 
-                                String? downloadPath = await getDownloadPath();
-                                if (downloadPath == null) return false;
+                                    String? downloadPath =
+                                        await getDownloadPath();
+                                    if (downloadPath == null) return false;
 
-                                await FlutterDownloader.enqueue(
-                                  url:
-                                      'http://192.168.0.105:8080/api/project-report/TR4',
-                                  headers: {
-                                    'Authorization': 'Bearer $token'
-                                  }, // optional: header send with url (auth token etc)
-                                  fileName: 'reporte-proyectos.xlsx',
-                                  savedDir: downloadPath,
-                                  showNotification:
-                                      true, // show download progress in status bar (for Android)
-                                  openFileFromNotification:
-                                      true, // click on notification to open downloaded file (for Android)
-                                );
-                              },
-                              buttonText: 'Descargar Reporte'),
-                          MyButton(
-                              onPressed: () async {
-                                await ref
-                                    .read(splashControllerProvider.notifier)
-                                    .logout();
-                              },
-                              buttonText: 'Cerrar Sesión')
-                        ],
-                      );
-                    }))));
+                                    await FlutterDownloader.enqueue(
+                                      url:
+                                          'http://192.168.0.105:8080/api/project-report/TR4',
+                                      headers: {
+                                        'Authorization': 'Bearer $token'
+                                      }, // optional: header send with url (auth token etc)
+                                      fileName: 'reporte-proyectos.xlsx',
+                                      savedDir: downloadPath,
+                                      showNotification:
+                                          true, // show download progress in status bar (for Android)
+                                      openFileFromNotification:
+                                          true, // click on notification to open downloaded file (for Android)
+                                    );
+                                  },
+                                  buttonText: 'Descargar Reporte'),
+                              MyButton(
+                                  onPressed: () async {
+                                    await ref
+                                        .read(splashControllerProvider.notifier)
+                                        .logout();
+                                  },
+                                  buttonText: 'Cerrar Sesión'),
+                              MyButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.projects);
+                                  },
+                                  buttonText: 'Ir A Proyectos'),
+                            ],
+                          )));
+                })));
   }
 }

@@ -50,6 +50,8 @@ dependencies:
   freezed: ^2.4.5
   path_provider: ^2.1.1
   flutter_downloader: ^1.11.3
+  ternav_icons: ^1.0.0
+  data_table_2: ^2.5.8
 
 dev_dependencies:
   flutter_test:

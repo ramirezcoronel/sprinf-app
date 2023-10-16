@@ -6,4 +6,5 @@ class Routes {
   static const splash = '/splash-screen';
   static const login = '/login';
   static const home = '/home';
+  static const projects = '/projects';
 }
