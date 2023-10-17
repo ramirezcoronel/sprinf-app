@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sprinf_app/app/presentation/modules/auth/views/auth_page.dart';
+import 'package:sprinf_app/app/presentation/modules/baremos/views/list_baremos.dart';
 import 'package:sprinf_app/app/presentation/modules/home/views/home_page.dart';
 import 'package:sprinf_app/app/presentation/modules/projects/details.dart';
 import 'package:sprinf_app/app/presentation/modules/projects/search.dart';
@@ -15,6 +16,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.home: (context) => const HomePage(),
     Routes.students: (context) => const SearchStudents(),
     Routes.projects: (context) => const SearchProjects(),
+    Routes.baremos: (context) => const ListBaremosScreen(),
     Routes.projectsDetails: (context) {
       final String id = ModalRoute.of(context)!.settings.arguments as String;
       return Details(id);

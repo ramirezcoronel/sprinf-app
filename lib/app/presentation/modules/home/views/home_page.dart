@@ -119,7 +119,7 @@ class HomePage extends ConsumerWidget {
                                   child: ListTile(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, Routes.students);
+                                          context, Routes.baremos);
                                     },
                                     leading:
                                         Icon(TernavIcons.lightOutline.grid),
@@ -169,7 +169,7 @@ class HomePage extends ConsumerWidget {
                                   child: ListTile(
                                     leading:
                                         Icon(TernavIcons.lightOutline.logout),
-                                    title: Text('Cerrar Sesión'),
+                                    title: const Text('Cerrar Sesión'),
                                     onTap: () async {
                                       await ref
                                           .read(

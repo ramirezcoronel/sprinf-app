@@ -10,4 +10,6 @@ class Routes {
   static const projectsDetails = '/details';
   static const students = '/students';
   static const studentsDetails = '/student-details';
+  static const baremos = '/baremos';
+  static const baremosDetails = '/baremos-details';
 }
