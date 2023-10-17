@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:sprinf_app/routes/routes.dart';
 import 'package:ternav_icons/ternav_icons.dart';
 
@@ -18,7 +19,11 @@ class ListBaremosScreen extends StatelessWidget {
               margin: const EdgeInsets.all(0.0),
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Icon(TernavIcons.lightOutline.grid),
+                  backgroundColor: HexColor("#024cb0"),
+                  child: Icon(
+                    TernavIcons.lightOutline.grid,
+                    color: Colors.white,
+                  ),
                 ),
                 title: const Text('Baremos - Trayecto I'),
                 subtitle: const Text('Fase 1 y 2'),
@@ -32,7 +37,11 @@ class ListBaremosScreen extends StatelessWidget {
               margin: const EdgeInsets.all(0.0),
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Icon(TernavIcons.lightOutline.grid),
+                  backgroundColor: HexColor("#024cb0"),
+                  child: Icon(
+                    TernavIcons.lightOutline.grid,
+                    color: Colors.white,
+                  ),
                 ),
                 title: const Text('Baremos - Trayecto II'),
                 subtitle: const Text('Fase 1 y 2'),
@@ -46,7 +55,11 @@ class ListBaremosScreen extends StatelessWidget {
               margin: const EdgeInsets.all(0.0),
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Icon(TernavIcons.lightOutline.grid),
+                  backgroundColor: HexColor("#024cb0"),
+                  child: Icon(
+                    TernavIcons.lightOutline.grid,
+                    color: Colors.white,
+                  ),
                 ),
                 title: const Text('Baremos - Trayecto III'),
                 subtitle: const Text('Fase 1 y 2'),
@@ -60,7 +73,11 @@ class ListBaremosScreen extends StatelessWidget {
               margin: const EdgeInsets.all(0.0),
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Icon(TernavIcons.lightOutline.grid),
+                  backgroundColor: HexColor("#024cb0"),
+                  child: Icon(
+                    TernavIcons.lightOutline.grid,
+                    color: Colors.white,
+                  ),
                 ),
                 title: const Text('Baremos - Trayecto IV'),
                 subtitle: const Text('Fase 1 y 2'),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:sprinf_app/app/domain/model/indicador.dart';
 import 'package:sprinf_app/app/presentation/modules/baremos/controller/baremos_details_controller.dart';
 import 'package:sprinf_app/app/presentation/modules/projects/controller/details_controller.dart';
@@ -40,11 +41,21 @@ class BaremosDetails extends ConsumerWidget {
                                 margin: const EdgeInsets.all(0.0),
                                 child: ListTile(
                                   leading: CircleAvatar(
-                                    child:
-                                        Icon(TernavIcons.lightOutline.profile),
+                                    backgroundColor: HexColor("#024cb0"),
+                                    child: Icon(
+                                      TernavIcons.lightOutline.grid,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   title: Text(
-                                      '${data[i].nombreTrayecto} - ${data[i].nombreFase}'),
+                                      '${data[i].nombreTrayecto} - ${data[i].nombreFase}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        // color: HexColor("#ffffff"),
+                                      )),
+                                  subtitle: Text(
+                                      '${data[i].fechaInicio} -  ${data[i].fechaCierre}'),
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -59,11 +70,17 @@ class BaremosDetails extends ConsumerWidget {
                                           margin: const EdgeInsets.all(0.0),
                                           child: ListTile(
                                             title: Text(
-                                                '${data[i].baremos![index].nombre}'),
+                                                '${data[i].baremos![index].nombre}',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  // color: HexColor("#ffffff"),
+                                                )),
                                             subtitle: Text(
                                                 '${data[i].baremos![index].dimensiones} dimensiones'),
                                           ),
                                         ),
+                                        SizedBox(height: 20),
                                         ListView.builder(
                                           shrinkWrap: true,
                                           physics: ClampingScrollPhysics(),
@@ -83,7 +100,14 @@ class BaremosDetails extends ConsumerWidget {
                                                       const EdgeInsets.all(0.0),
                                                   child: ListTile(
                                                     title: Text(
-                                                        '${dimension.nombre}'),
+                                                        '${dimension.nombre}',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          // color: HexColor("#ffffff"),
+                                                        )),
                                                     subtitle: Text(
                                                         (dimension.grupal == '0'
                                                             ? 'Individual'
@@ -111,14 +135,16 @@ class BaremosDetails extends ConsumerWidget {
                                                               "Ponderación: ${indicador.ponderacion}"),
                                                         ),
                                                       );
-                                                    })
+                                                    }),
+                                                SizedBox(height: 20)
                                               ],
                                             );
                                           },
                                         )
                                       ],
                                     );
-                                  }))
+                                  })),
+                              SizedBox(height: 40)
                             ],
                           );
                         },

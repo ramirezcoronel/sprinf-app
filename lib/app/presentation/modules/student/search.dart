@@ -83,7 +83,9 @@ class SearchStudents extends ConsumerWidget {
                               margin: const EdgeInsets.all(0.0),
                               child: ListTile(
                                 leading: CircleAvatar(
-                                  child: Icon(TernavIcons.lightOutline.profile),
+                                  backgroundColor: HexColor("#024cb0"),
+                                  child: Icon(TernavIcons.lightOutline.profile,
+                                      color: Colors.white),
                                 ),
                                 title: Text(
                                     '${data![i].nombre} ${data[i].apellido}'),
