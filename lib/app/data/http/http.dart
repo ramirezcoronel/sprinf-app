@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:sprinf_app/app/domain/either.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,14 +15,14 @@ part 'http.g.dart';
 enum HttpMethod { get, post }
 
 class Http {
-  Http({required baseUrl, required token, required client})
+  Http({required baseUrl, required secureStorage, required client})
       : _client = client,
         _baseUrl = baseUrl,
-        _token = token;
+        _secureStorage = secureStorage;
 
   final Client _client;
   final String _baseUrl;
-  final String _token;
+  final FlutterSecureStorage _secureStorage;
 
   Future<Either<HttpFailure, R>> request<R>(String path,
       {HttpMethod method = HttpMethod.get,
@@ -45,9 +46,14 @@ class Http {
       };
 
       if (useToken) {
-        print('añadiendo header token $_token');
+        String? token = await _secureStorage.read(key: 'token');
+        if (token == null) {
+          throw HttpFailure(
+              exception: 'No cuenta con token de verificacion',
+              statusCode: 400);
+        }
         headers = {
-          HttpHeaders.authorizationHeader: 'Bearer $_token',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
           ...headers
         };
       }
@@ -102,6 +108,9 @@ class Http {
 }
 
 @riverpod
-Http http(HttpRef ref, {required String baseUrl, required String token}) {
-  return Http(baseUrl: baseUrl, token: token, client: Client());
+Http http(HttpRef ref, {required String baseUrl}) {
+  return Http(
+      baseUrl: baseUrl,
+      secureStorage: const FlutterSecureStorage(),
+      client: Client());
 }

@@ -22,7 +22,7 @@ class Student with _$Student {
     String? email,
     required Project? proyecto,
     List<Enrollment>? inscripciones,
-    @JsonKey(name: 'proyecto_id') required String proyectoId,
+    @JsonKey(name: 'proyecto_id') required String? proyectoId,
   }) = _Student;
 
   factory Student.fromJson(Map<String, dynamic> json) =>

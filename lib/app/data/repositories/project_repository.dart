@@ -27,7 +27,7 @@ class ProjectRepository {
 }
 
 @riverpod
-ProjectRepository projectRepository(ProjectRepositoryRef ref, String token) {
-  return ProjectRepository(ref.watch(
-      HttpProvider(baseUrl: 'http://192.168.0.105:8080/', token: token)));
+ProjectRepository projectRepository(ProjectRepositoryRef ref) {
+  return ProjectRepository(
+      ref.watch(HttpProvider(baseUrl: 'http://192.168.0.105:8080/')));
 }

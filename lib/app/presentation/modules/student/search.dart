@@ -1,161 +1,122 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sprinf_app/app/domain/model/student.dart';
+import 'package:sprinf_app/app/presentation/modules/student/controller/search_student_controller.dart';
 import 'package:sprinf_app/routes/routes.dart';
 import 'package:ternav_icons/ternav_icons.dart';
 
-class SearchStudents extends StatefulWidget {
+class SearchStudents extends ConsumerWidget {
   const SearchStudents({super.key});
 
   @override
-  State<SearchStudents> createState() => _SearchStudentsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(searchStudentControllerProvider);
 
-class _SearchStudentsState extends State<SearchStudents> {
-  TextEditingController controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
+    List<Student?> searchResult = [];
 
-  // Get json result and convert it to model. Then add
-  Future<void> getUserDetails() async {
-    final response = await http.get(Uri.parse(url));
-    final responseJson = json.decode(response.body);
-
-    setState(() {
-      for (Map<String, dynamic> user in responseJson) {
-        _userDetails.add(UserDetails.fromJson(user));
+    searchStudents(String text, List<Student?> estudiantes) async {
+      searchResult.clear();
+      if (text.isEmpty || estudiantes.isNotEmpty) {
+        return estudiantes;
       }
-    });
-  }
 
-  @override
-  void initState() {
-    super.initState();
+      for (var userDetail in estudiantes) {
+        if (userDetail!.nombre.contains(text) ||
+            userDetail.apellido.contains(text)) searchResult.add(userDetail);
+      }
+    }
 
-    getUserDetails();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Estudiantes'),
         elevation: 0.0,
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            color: HexColor('#0249a7'),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: ListTile(
-                  leading: const Icon(Icons.search),
-                  title: TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(
-                        hintText: 'Buscar Estudiante',
-                        border: InputBorder.none),
-                    onChanged: onSearchTextChanged,
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.cancel),
-                    onPressed: () {
-                      controller.clear();
-                      onSearchTextChanged('');
-                    },
+      body: state.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) => Text(error.toString()),
+          data: (data) {
+            if (data == null) return Text('No hay estudiantes');
+            return Column(
+              children: <Widget>[
+                Container(
+                  color: HexColor('#0249a7'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.search),
+                        title: TextField(
+                          controller: controller,
+                          decoration: const InputDecoration(
+                              hintText: 'Buscar Estudiante',
+                              border: InputBorder.none),
+                          onChanged: (value) => searchStudents(value, data),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.cancel),
+                          onPressed: () {
+                            controller.clear();
+                            searchStudents('', data);
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
-                ? ListView.builder(
-                    itemCount: _searchResult.length,
-                    itemBuilder: (context, i) {
-                      return Card(
-                        margin: const EdgeInsets.all(0.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                              // backgroundImage: NetworkImage(
-                              //   _searchResult[i].profileUrl,
-                              // ),
+                Expanded(
+                  child: searchResult.isNotEmpty || controller.text.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: searchResult.length,
+                          itemBuilder: (context, i) {
+                            return Card(
+                              margin: const EdgeInsets.all(0.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                    // backgroundImage: NetworkImage(
+                                    //   searchResult[i].profileUrl,
+                                    // ),
+                                    ),
+                                title: Text(
+                                    '${searchResult[i]!.nombre} ${searchResult[i]!.apellido}'),
                               ),
-                          title: Text(
-                              '${_searchResult[i].firstName} ${_searchResult[i].lastName}'),
-                        ),
-                      );
-                    },
-                  )
-                : ListView.builder(
-                    itemCount: _userDetails.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.all(0.0),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.studentsDetails,
-                                arguments: index);
-                            print('Navegar a pagina de estudiante $index');
+                            );
                           },
-                          leading: CircleAvatar(
-                            child: Icon(TernavIcons.lightOutline.folder),
-                            // backgroundImage: NetworkImage(
-                            //   _userDetails[index].profileUrl,
-                            // ),
-                          ),
-                          title: Text(
-                              '${_userDetails[index].firstName} ${_userDetails[index].lastName}'),
+                        )
+                      : ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: const EdgeInsets.all(0.0),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.studentsDetails,
+                                      arguments: index);
+                                  print(
+                                      'Navegar a pagina de estudiante $index');
+                                },
+                                leading: CircleAvatar(
+                                  child: Icon(TernavIcons.lightOutline.profile),
+                                  // backgroundImage: NetworkImage(
+                                  //   _userDetails[index].profileUrl,
+                                  // ),
+                                ),
+                                title: Text(
+                                    '${data[index]!.nombre} ${data[index]!.apellido}'),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  onSearchTextChanged(String text) async {
-    _searchResult.clear();
-    if (text.isEmpty) {
-      setState(() {});
-      return;
-    }
-
-    _userDetails.forEach((userDetail) {
-      if (userDetail.firstName.contains(text) ||
-          userDetail.lastName.contains(text)) _searchResult.add(userDetail);
-    });
-
-    setState(() {});
-  }
-}
-
-List<UserDetails> _searchResult = [];
-
-List<UserDetails> _userDetails = [];
-
-final String url = 'https://jsonplaceholder.typicode.com/users';
-
-class UserDetails {
-  final int id;
-  final String firstName, lastName, profileUrl;
-
-  UserDetails(
-      {required this.id,
-      required this.firstName,
-      required this.lastName,
-      this.profileUrl =
-          'https://i.amz.mshcdn.com/3NbrfEiECotKyhcUhgPJHbrL7zM=/950x534/filters:quality(90)/2014%2F06%2F02%2Fc0%2Fzuckheadsho.a33d0.jpg'});
-
-  factory UserDetails.fromJson(Map<String, dynamic> json) {
-    return UserDetails(
-      id: json['id'],
-      firstName: json['name'],
-      lastName: json['username'],
+                ),
+              ],
+            );
+          }),
     );
   }
 }

@@ -23,6 +23,6 @@ class AuthRepository {
 
 @riverpod
 AuthRepository authRepository(AuthRepositoryRef ref) {
-  return AuthRepository(ref
-      .watch(HttpProvider(baseUrl: 'http://192.168.0.105:8080/', token: '')));
+  return AuthRepository(
+      ref.watch(HttpProvider(baseUrl: 'http://192.168.86.1:8080/')));
 }
