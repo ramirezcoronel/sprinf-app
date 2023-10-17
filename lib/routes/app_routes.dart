@@ -9,6 +9,8 @@ import 'package:sprinf_app/app/presentation/modules/student/details.dart';
 import 'package:sprinf_app/app/presentation/modules/student/search.dart';
 import 'package:sprinf_app/routes/routes.dart';
 
+import '../app/presentation/modules/baremos/views/details_baremos.dart';
+
 Map<String, Widget Function(BuildContext)> get appRoutes {
   return {
     Routes.splash: (context) => const SplashScreen(),
@@ -24,6 +26,10 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.studentsDetails: (context) {
       final String id = ModalRoute.of(context)!.settings.arguments as String;
       return StudentDetails(id);
+    },
+    Routes.baremosDetails: (context) {
+      final String id = ModalRoute.of(context)!.settings.arguments as String;
+      return BaremosDetails(id);
     }
   };
 }

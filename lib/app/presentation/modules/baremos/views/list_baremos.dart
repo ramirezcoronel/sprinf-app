@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sprinf_app/routes/routes.dart';
 import 'package:ternav_icons/ternav_icons.dart';
 
 class ListBaremosScreen extends StatelessWidget {
@@ -22,6 +23,8 @@ class ListBaremosScreen extends StatelessWidget {
                 title: const Text('Baremos - Trayecto I'),
                 subtitle: const Text('Fase 1 y 2'),
                 trailing: Icon(TernavIcons.lightOutline.arrow_right_1),
+                onTap: () => Navigator.pushNamed(context, Routes.baremosDetails,
+                    arguments: 'TR1'),
               ),
             ),
             const SizedBox(height: 10),
@@ -34,6 +37,8 @@ class ListBaremosScreen extends StatelessWidget {
                 title: const Text('Baremos - Trayecto II'),
                 subtitle: const Text('Fase 1 y 2'),
                 trailing: Icon(TernavIcons.lightOutline.arrow_right_1),
+                onTap: () => Navigator.pushNamed(context, Routes.baremosDetails,
+                    arguments: 'TR2'),
               ),
             ),
             const SizedBox(height: 10),
@@ -46,6 +51,8 @@ class ListBaremosScreen extends StatelessWidget {
                 title: const Text('Baremos - Trayecto III'),
                 subtitle: const Text('Fase 1 y 2'),
                 trailing: Icon(TernavIcons.lightOutline.arrow_right_1),
+                onTap: () => Navigator.pushNamed(context, Routes.baremosDetails,
+                    arguments: 'TR3'),
               ),
             ),
             const SizedBox(height: 10),
@@ -58,6 +65,8 @@ class ListBaremosScreen extends StatelessWidget {
                 title: const Text('Baremos - Trayecto IV'),
                 subtitle: const Text('Fase 1 y 2'),
                 trailing: Icon(TernavIcons.lightOutline.arrow_right_1),
+                onTap: () => Navigator.pushNamed(context, Routes.baremosDetails,
+                    arguments: 'TR4'),
               ),
             ),
           ],
