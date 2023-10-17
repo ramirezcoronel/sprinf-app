@@ -11,7 +11,7 @@ class StudentRepository {
   StudentRepository(this._http);
   final Http _http;
 
-  Future<Either<HttpFailure, List<Student>?>> listar() async {
+  Future<List<Student>?> listar() async {
     final result = await _http.request('api/estudiantes/listar',
         useToken: true, method: HttpMethod.post, onSucess: (responseBody) {
       if (responseBody is Iterable) {
@@ -22,8 +22,11 @@ class StudentRepository {
       }
     });
 
-    return result.when((failure) => Either.left(failure),
-        (estudiantes) => Either.right(estudiantes));
+    return result.when(
+        (failure) => throw HttpFailure(
+            exception: failure.exception.toString(),
+            statusCode: failure.statusCode),
+        (estudiantes) => estudiantes);
   }
 
   Future<Either<HttpFailure, Student>> obtener(String id) async {
@@ -43,7 +46,12 @@ class StudentRepository {
 }
 
 @riverpod
-StudentRepository studentRepository(StudentRepositoryRef ref, String token) {
+StudentRepository studentRepository(StudentRepositoryRef ref) {
   return StudentRepository(
       ref.watch(HttpProvider(baseUrl: 'http://192.168.86.1:8080/')));
+}
+
+@riverpod
+Future<List<Student>?> listarEstudiantes(ListarEstudiantesRef ref) async {
+  return await ref.read(studentRepositoryProvider).listar();
 }

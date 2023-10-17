@@ -15,11 +15,11 @@ import '../../global/constant.dart';
 class StudentDetails extends ConsumerWidget {
   const StudentDetails(this.id, {super.key});
 
-  final int id;
+  final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final estudiante = ref.watch(studentDetailsControllerProvider(1));
+    final estudiante = ref.watch(studentDetailsControllerProvider(id));
 
     return Scaffold(
       appBar: AppBar(

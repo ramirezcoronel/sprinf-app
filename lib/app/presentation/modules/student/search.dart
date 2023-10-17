@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sprinf_app/app/data/repositories/student_repository.dart';
 import 'package:sprinf_app/app/domain/model/student.dart';
 import 'package:sprinf_app/app/presentation/modules/student/controller/search_student_controller.dart';
 import 'package:sprinf_app/routes/routes.dart';
@@ -15,7 +16,7 @@ class SearchStudents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(searchStudentControllerProvider);
+    final consulta = ref.watch(listarEstudiantesProvider);
 
     TextEditingController controller = TextEditingController();
     List<Student?> searchResult = [];
@@ -37,11 +38,14 @@ class SearchStudents extends ConsumerWidget {
         title: const Text('Estudiantes'),
         elevation: 0.0,
       ),
-      body: state.when(
+      body: consulta.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Text(error.toString()),
           data: (data) {
             if (data == null) return Text('No hay estudiantes');
+
+            final state = ref.watch(searchStudentControllerProvider(data));
+
             return Column(
               children: <Widget>[
                 Container(
@@ -52,11 +56,15 @@ class SearchStudents extends ConsumerWidget {
                       child: ListTile(
                         leading: const Icon(Icons.search),
                         title: TextField(
-                          controller: controller,
                           decoration: const InputDecoration(
                               hintText: 'Buscar Estudiante',
                               border: InputBorder.none),
-                          onChanged: (value) => searchStudents(value, data),
+                          onChanged: (value) {
+                            ref
+                                .read(searchStudentControllerProvider(data)
+                                    .notifier)
+                                .filter(data, value);
+                          },
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.cancel),
@@ -70,49 +78,35 @@ class SearchStudents extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                  child: searchResult.isNotEmpty || controller.text.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: searchResult.length,
+                  child: state.when(
+                      data: (data) {
+                        return ListView.builder(
+                          itemCount: data!.length,
                           itemBuilder: (context, i) {
                             return Card(
                               margin: const EdgeInsets.all(0.0),
                               child: ListTile(
                                 leading: CircleAvatar(
-                                    // backgroundImage: NetworkImage(
-                                    //   searchResult[i].profileUrl,
-                                    // ),
-                                    ),
+                                  child: Icon(TernavIcons.lightOutline.profile),
+                                ),
                                 title: Text(
-                                    '${searchResult[i]!.nombre} ${searchResult[i]!.apellido}'),
-                              ),
-                            );
-                          },
-                        )
-                      : ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              margin: const EdgeInsets.all(0.0),
-                              child: ListTile(
+                                    '${data![i].nombre} ${data[i].apellido}'),
+                                subtitle: Text("C.I. ${data![i].cedula}"),
+                                trailing: Icon(
+                                    TernavIcons.lightOutline.arrow_right_1),
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, Routes.studentsDetails,
-                                      arguments: index);
-                                  print(
-                                      'Navegar a pagina de estudiante $index');
+                                      arguments: data[i].id);
                                 },
-                                leading: CircleAvatar(
-                                  child: Icon(TernavIcons.lightOutline.profile),
-                                  // backgroundImage: NetworkImage(
-                                  //   _userDetails[index].profileUrl,
-                                  // ),
-                                ),
-                                title: Text(
-                                    '${data[index]!.nombre} ${data[index]!.apellido}'),
                               ),
                             );
                           },
-                        ),
+                        );
+                      },
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator())),
                 ),
               ],
             );

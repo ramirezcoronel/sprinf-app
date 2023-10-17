@@ -20,7 +20,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
       return Details(id);
     },
     Routes.studentsDetails: (context) {
-      final int id = ModalRoute.of(context)!.settings.arguments as int;
+      final String id = ModalRoute.of(context)!.settings.arguments as String;
       return StudentDetails(id);
     }
   };

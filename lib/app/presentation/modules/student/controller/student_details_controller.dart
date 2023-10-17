@@ -18,14 +18,13 @@ part 'student_details_controller.g.dart';
 @riverpod
 class StudentDetailsController extends _$StudentDetailsController {
   @override
-  FutureOr<Student?> build(int id) async {
+  FutureOr<Student?> build(String id) async {
     // no-op
     state = const AsyncValue.loading();
 
     String? token = await ref.read(sessionServiceProvider).token;
     if (token == null) throw Exception('Token no definido');
-    final resultado =
-        await ref.read(studentRepositoryProvider(token)).obtener("e-15408");
+    final resultado = await ref.read(studentRepositoryProvider).obtener(id);
     return resultado.when(
         (p0) => throw Exception('Error al obtener estudiante'),
         (estudiante) => estudiante);
