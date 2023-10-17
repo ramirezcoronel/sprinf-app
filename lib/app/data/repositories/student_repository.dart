@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sprinf_app/app/data/http/http.dart';
 import 'package:sprinf_app/app/domain/model/student.dart';
-import 'package:sprinf_app/app/domain/model/user.dart';
 
 import '../../domain/either.dart';
 

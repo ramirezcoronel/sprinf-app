@@ -1,160 +1,99 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:sprinf_app/app/data/repositories/project_repository.dart';
+import 'package:sprinf_app/app/data/repositories/student_repository.dart';
+import 'package:sprinf_app/app/presentation/modules/projects/controller/search_project_controller.dart';
+import 'package:sprinf_app/app/presentation/modules/student/controller/search_student_controller.dart';
 import 'package:sprinf_app/routes/routes.dart';
 import 'package:ternav_icons/ternav_icons.dart';
 
-class SearchProjects extends StatefulWidget {
+class SearchProjects extends ConsumerWidget {
   const SearchProjects({super.key});
 
   @override
-  State<SearchProjects> createState() => _SearchProjectsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final consulta = ref.watch(listarProyectosProvider);
 
-class _SearchProjectsState extends State<SearchProjects> {
-  TextEditingController controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
 
-  // Get json result and convert it to model. Then add
-  Future<void> getUserDetails() async {
-    final response = await http.get(Uri.parse(url));
-    final responseJson = json.decode(response.body);
-
-    setState(() {
-      for (Map<String, dynamic> user in responseJson) {
-        _userDetails.add(UserDetails.fromJson(user));
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    getUserDetails();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Proyectos'),
         elevation: 0.0,
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            color: HexColor('#0249a7'),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                child: ListTile(
-                  leading: const Icon(Icons.search),
-                  title: TextField(
-                    controller: controller,
-                    decoration: const InputDecoration(
-                        hintText: 'Buscar Proyecto', border: InputBorder.none),
-                    onChanged: onSearchTextChanged,
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.cancel),
-                    onPressed: () {
-                      controller.clear();
-                      onSearchTextChanged('');
-                    },
+      body: consulta.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) => Text(error.toString()),
+          data: (data) {
+            if (data == null) return const Text('No hay proyectos');
+
+            final state = ref.watch(searchProjectControllerProvider(data));
+
+            return Column(
+              children: <Widget>[
+                Container(
+                  color: HexColor('#0249a7'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.search),
+                        title: TextField(
+                          decoration: const InputDecoration(
+                              hintText: 'Buscar Proyectos',
+                              border: InputBorder.none),
+                          onChanged: (value) {
+                            ref
+                                .read(searchProjectControllerProvider(data)
+                                    .notifier)
+                                .filter(data, value);
+                          },
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.cancel),
+                          onPressed: () {
+                            controller.clear();
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: _searchResult.isNotEmpty || controller.text.isNotEmpty
-                ? ListView.builder(
-                    itemCount: _searchResult.length,
-                    itemBuilder: (context, i) {
-                      return Card(
-                        margin: const EdgeInsets.all(0.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                              // backgroundImage: NetworkImage(
-                              //   _searchResult[i].profileUrl,
-                              // ),
+                Expanded(
+                  child: state.when(
+                      data: (data) {
+                        return ListView.builder(
+                          itemCount: data!.length,
+                          itemBuilder: (context, i) {
+                            return Card(
+                              margin: const EdgeInsets.all(0.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  child: Icon(TernavIcons.lightOutline.profile),
+                                ),
+                                title: Text('${data![i].nombre}}'),
+                                subtitle: Text(
+                                    "${data[i].nombreTrayecto} - ${data[i].comunidad} - ${data[i].tutorInNombre}"),
+                                trailing: Icon(
+                                    TernavIcons.lightOutline.arrow_right_1),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.projectsDetails,
+                                      arguments: data[i].id);
+                                },
                               ),
-                          title: Text(
-                              '${_searchResult[i].firstName} ${_searchResult[i].lastName}'),
-                        ),
-                      );
-                    },
-                  )
-                : ListView.builder(
-                    itemCount: _userDetails.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.all(0.0),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.projectsDetails,
-                                arguments: index);
-                            print('Navegar a pagina de proyecto $index');
+                            );
                           },
-                          leading: CircleAvatar(
-                            child: Icon(TernavIcons.lightOutline.folder),
-                            // backgroundImage: NetworkImage(
-                            //   _userDetails[index].profileUrl,
-                            // ),
-                          ),
-                          title: Text(
-                              '${_userDetails[index].firstName} ${_userDetails[index].lastName}'),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  onSearchTextChanged(String text) async {
-    _searchResult.clear();
-    if (text.isEmpty) {
-      setState(() {});
-      return;
-    }
-
-    _userDetails.forEach((userDetail) {
-      if (userDetail.firstName.contains(text) ||
-          userDetail.lastName.contains(text)) _searchResult.add(userDetail);
-    });
-
-    setState(() {});
-  }
-}
-
-List<UserDetails> _searchResult = [];
-
-List<UserDetails> _userDetails = [];
-
-final String url = 'https://jsonplaceholder.typicode.com/users';
-
-class UserDetails {
-  final int id;
-  final String firstName, lastName, profileUrl;
-
-  UserDetails(
-      {required this.id,
-      required this.firstName,
-      required this.lastName,
-      this.profileUrl =
-          'https://i.amz.mshcdn.com/3NbrfEiECotKyhcUhgPJHbrL7zM=/950x534/filters:quality(90)/2014%2F06%2F02%2Fc0%2Fzuckheadsho.a33d0.jpg'});
-
-  factory UserDetails.fromJson(Map<String, dynamic> json) {
-    return UserDetails(
-      id: json['id'],
-      firstName: json['name'],
-      lastName: json['username'],
+                        );
+                      },
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator())),
+                ),
+              ],
+            );
+          }),
     );
   }
 }

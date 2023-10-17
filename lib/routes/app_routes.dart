@@ -13,10 +13,10 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.splash: (context) => const SplashScreen(),
     Routes.login: (context) => const AuthPage(),
     Routes.home: (context) => const HomePage(),
-    Routes.students: (context) => SearchStudents(),
-    Routes.projects: (context) => SearchProjects(),
+    Routes.students: (context) => const SearchStudents(),
+    Routes.projects: (context) => const SearchProjects(),
     Routes.projectsDetails: (context) {
-      final int id = ModalRoute.of(context)!.settings.arguments as int;
+      final String id = ModalRoute.of(context)!.settings.arguments as String;
       return Details(id);
     },
     Routes.studentsDetails: (context) {

@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:sprinf_app/app/data/repositories/student_repository.dart';
 import 'package:sprinf_app/app/domain/model/student.dart';
 import 'package:sprinf_app/app/presentation/modules/student/controller/search_student_controller.dart';

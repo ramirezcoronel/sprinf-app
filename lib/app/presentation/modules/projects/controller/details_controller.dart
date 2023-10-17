@@ -16,7 +16,7 @@ part 'details_controller.g.dart';
 @riverpod
 class DetailsController extends _$DetailsController {
   @override
-  FutureOr<Project?> build(int id) async {
+  FutureOr<Project?> build(String id) async {
     // no-op
     state = const AsyncValue.loading();
 

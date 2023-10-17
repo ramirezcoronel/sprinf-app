@@ -14,11 +14,11 @@ import '../../global/constant.dart';
 class Details extends ConsumerWidget {
   const Details(this.id, {super.key});
 
-  final int id;
+  final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final proyecto = ref.watch(detailsControllerProvider(1));
+    final proyecto = ref.watch(detailsControllerProvider(id));
 
     return Scaffold(
       appBar: AppBar(

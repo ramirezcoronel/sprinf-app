@@ -10,24 +10,43 @@ class ProjectRepository {
   ProjectRepository(this._http);
   final Http _http;
 
+  Future<List<Project>?> listar() async {
+    final result = await _http.request('api/proyectos',
+        useToken: true, method: HttpMethod.post, onSucess: (responseBody) {
+      if (responseBody is Iterable) {
+        List<Project> resultado = responseBody
+            .map((estudiante) => Project.fromJson(estudiante))
+            .toList();
+        return resultado;
+      }
+    });
+
+    return result.when(
+        (failure) => throw HttpFailure(
+            exception: failure.exception.toString(),
+            statusCode: failure.statusCode),
+        (estudiantes) => estudiantes);
+  }
+
   Future<Either<HttpFailure, Project>> obtener(String id) async {
-    return Future.value(Either.right(const Project(
-        id: "1",
-        nombre: "Sistema de Gestión de Proyectos Sociotecnologicos",
-        comunidad: "UPTAEB",
-        direccion: "Av. La Salle",
-        tutorEx: "Jose Sequera",
-        tutorInNombre: "Sonia",
-        tutorInCedula: "235465",
-        nombreTrayecto: "Trayecto III",
-        nombreFase: "Fase I",
-        fechaInicio: "2023-02-01",
-        fechaCierre: "2024-03-01")));
+    final result = await _http.request('api/proyecto/$id',
+        useToken: true, method: HttpMethod.post, onSucess: (responseBody) {
+      Project estudiante = Project.fromJson(responseBody);
+      return estudiante;
+    });
+
+    return result.when((error) => Either.left(error),
+        (estudiante) => Either.right(estudiante));
   }
 }
 
 @riverpod
 ProjectRepository projectRepository(ProjectRepositoryRef ref) {
   return ProjectRepository(
-      ref.watch(HttpProvider(baseUrl: 'http://192.168.0.105:8080/')));
+      ref.watch(HttpProvider(baseUrl: 'http://192.168.86.1:8080/')));
+}
+
+@riverpod
+Future<List<Project>?> listarProyectos(ListarProyectosRef ref) async {
+  return await ref.read(projectRepositoryProvider).listar();
 }
